@@ -24,30 +24,45 @@ class UserCollection(Collection):
     if ctx.author.id in ctx.bot.cooldown_users:
       return
 
-    args_count = len(ctx.args)
+    args_count = len(ctx.message.content.split(' '))
     random_number = randint(0, 11)
-    timestamp = (ctx.message.created_at - self.data['timestamp']).total_seconds()
+    timestamp = ((ctx.message.created_at - self.data['timestamp']).total_seconds() * 3) / 100
     rank_boost = rank_boosts[self.data['rank'] - 1]
-    result = limit((limit(args_count / 2) + random_number + limit(timestamp) + rank_boost) / 2, True)
+    result = int(limit((limit(args_count) + random_number + limit(timestamp) + rank_boost) / 2, True))
+
+    if args_count == 1 and len(ctx.messge.content) <= 3:
+      result = 1
 
     total_pdl = self.data['pdl'] + result
     total_rank = self.data['rank']
+    rank_up = False
 
-    if total_pdl >= 1000:
+    if total_pdl >= (total_rank * 100) and not total_rank == 27:
       total_pdl = 0
       total_rank += 1
-      rank_name = rank[total_rank - 1]
-      ctx.send(f'Upou pro {rank_name}!')
+      rank_up = True
 
     self.update({
       "pdl": total_pdl,
       "rank": total_rank
     })
 
-    channel = ctx.bot.get_channel(ctx.bot.env['PDL_CHANNEL'])
-    print(channel, ctx.bot.env['PDL_CHANNEL'])
+    if rank_up:
+      rank_name = rank[total_rank - 1]
+      await ctx.channel.send(f'{ctx.author} upou pro {rank_name}!')
+
+    print(f'''
+    args_count {args_count}
+    random_number {random_number}
+    timestamp {timestamp}
+    rank_boost {rank_boost}
+
+    result {result}
+    total {total_pdl}
+    ''')
+    channel = ctx.bot.get_channel(int(ctx.bot.env['PDL_CHANNEL']))
     if channel:
-      channel[0].send(f'**{ctx.author.username}** ganhou {result} **PDL**!')
+      await channel.send(f'**{ctx.author}** ganhou {result} **PDL**!')
      
 
 def limit (number, total = False):
@@ -77,12 +92,12 @@ rank_boosts = [
 ]
 
 rank = [
-  'Ferro I', 'Ferro II', 'Ferro III', 'Ferro IV',
-  'Bronze I', 'Bronze II', 'Bronze III', 'Bronze IV',
-  'Prata I', 'Prata II', 'Prata III', 'Prata IV',
-  'Gold I', 'Gold II', 'Gold III', 'Gold IV',
-  'Platina I', 'Platina II', 'Platina III', 'Platina IV',
-  'Diamante I', 'Diamante II', 'Diamante III', 'Diamante IV',
+  'Ferro IV', 'Ferro III', 'Ferro II', 'Ferro I',
+  'Bronze IV', 'Bronze III', 'Bronze II', 'Bronze I',
+  'Prata IV', 'Prata III', 'Prata II', 'Prata I',
+  'Gold IV', 'Gold II', 'Gold III', 'Gold IV',
+  'Platina IV', 'Platina III', 'Platina II', 'Platina I',
+  'Diamante IV', 'Diamante III', 'Diamante II', 'Diamante I',
   'Grão Mestre',
   'Mestre',
   'Desafiante'
