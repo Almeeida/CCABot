@@ -1,0 +1,25 @@
+{
+    "names": [
+        "Ferro IV", "Ferro III", "Ferro II", "Ferro I",
+        "Bronze IV", "Bronze III", "Bronze II", "Bronze I",
+        "Prata IV", "Prata III", "Prata II", "Prata I",
+        "Ouro IV", "Ouro II", "Ouro III", "Ouro IV",
+        "Platina IV", "Platina III", "Platina II", "Platina I",
+        "Diamante IV", "Diamante III", "Diamante II", "Diamante I",
+        "Grão Mestre",
+        "Mestre",
+        "Desafiante"
+      ],
+    "emojis": {
+      "ferro": "<:Iron:618541921882865692>",
+      "bronze": "<:Bronze:618541921727545374>",
+      "prata": "<:Silver:618541921760968744>",
+      "ouro": "<:Gold:618541922797223956>",
+      "platinium": "<:Platinium:618541922201632768>",
+      "diamond": "<:Diamond:618541921597653013>",
+      "grandmaster": "<:Grandmaster:618541921450852355>",
+      "master": "Master:618541922121940993>",
+      "challenger": "<:Challenger:618541921840791552>",
+      "blue_essence": "<:blue_essence:618838401558249483>"
+  }
+}
