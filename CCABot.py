@@ -3,6 +3,10 @@ from os import environ, listdir
 from discord.ext.commands import Bot, when_mentioned_or
 from database import UserManager, db
 
+from json import load
+with open('data/rank.json') as file_data:
+  data = load(file_data)
+
 class CCABot(Bot):
   def __init__ (self):
     super().__init__(
@@ -15,6 +19,7 @@ class CCABot(Bot):
     self.db = db
     self.cooldown_users = []
     self._users = UserManager(db.users.users)
+    self._data = data
     self.env = environ
 
   async def on_ready (self):
@@ -24,7 +29,7 @@ class CCABot(Bot):
       except Exception as e:
         print(f'Falha ao carregar o plugin \'{plugin}\'\n-\n{e.__class__.__name__}: {e}\n-')
       else:
-        print('Plugin {plugin} carregado com sucesso.')
+        print(f'Plugin {plugin} carregado com sucesso.')
 
   async def on_message(self, message):
     if message.author.bot:
