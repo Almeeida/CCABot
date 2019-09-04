@@ -30,26 +30,33 @@ class UserCollection(Collection):
     rank_boost = rank_boosts[self.data['rank'] - 1]
     result = int(limit((limit(args_count) + random_number + limit(timestamp) + rank_boost) / 2, True))
 
-    if args_count == 1 and len(ctx.messge.content) <= 3:
+    if args_count == 1 and len(ctx.message.content) <= 3:
       result = 1
 
     total_pdl = self.data['pdl'] + result
     total_rank = self.data['rank']
+    total_blue_essence = self.data['blue_essence']
+
+    required = total_rank * 100
     rank_up = False
 
-    if total_pdl >= (total_rank * 100) and not total_rank == 27:
-      total_pdl = 0
+    if total_pdl >= required and not total_rank == 27:
+      total_pdl -= required
       total_rank += 1
+      total_blue_essence += 1000
       rank_up = True
 
     self.update({
       "pdl": total_pdl,
-      "rank": total_rank
+      "rank": total_rank,
+      "blue_essence": total_blue_essence
     })
 
     if rank_up:
-      rank_name = rank[total_rank - 1]
-      await ctx.channel.send(f'{ctx.author} upou pro {rank_name}!')
+      rank_name = ctx.bot._data['names'][total_rank - 1]
+      rank_emoji = ctx.bot._data['emojis'][rank_name.split(' ')[0].lower()]
+      be_emoji = ctx.bot._data['emojis']['blue_essence']
+      await ctx.channel.send(f'{ctx.author.mention} Foi promovido para {rank_emoji} **{rank_name}**!\n > {be_emoji} 1000')
 
     print(f'''
     args_count {args_count}
@@ -89,16 +96,4 @@ rank_boosts = [
   3, # grão-mastre
   2, # mestre
   1 # challenger
-]
-
-rank = [
-  'Ferro IV', 'Ferro III', 'Ferro II', 'Ferro I',
-  'Bronze IV', 'Bronze III', 'Bronze II', 'Bronze I',
-  'Prata IV', 'Prata III', 'Prata II', 'Prata I',
-  'Gold IV', 'Gold II', 'Gold III', 'Gold IV',
-  'Platina IV', 'Platina III', 'Platina II', 'Platina I',
-  'Diamante IV', 'Diamante III', 'Diamante II', 'Diamante I',
-  'Grão Mestre',
-  'Mestre',
-  'Desafiante'
 ]
