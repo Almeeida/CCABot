@@ -54,18 +54,20 @@ class UserCollection(Collection):
       return
     
     # rank, pdl e essencia azul atual
-    rank = self.data['rank']
-    pdl = self.data['pdl']
-    blue_essence = self.data['blue_essence']
+    rank = self.data.get('rank') or 1
+    pdl = self.data.get('pdl') or 0
+    blue_essence = self.data.get('blue_essence') or 0
 
     # datetime atual
     date = str(datetime.now().timestamp())
+
+
     #
-    pdl_p_d = self.data['pdl_per_day']
-    rank_p_d = self.data['rank_per_day']
-    if date in pdl_p_d:
+    pdl_p_d = self.data.get('pdl_per_day') or {}
+    rank_p_d = self.data.get('rank_per_day') or {}
+    if date not in pdl_p_d:
       pdl_p_d[date] = 0
-    if date in rank_p_d:
+    if date not in rank_p_d:
       rank_p_d[date] = 0
 
     # porcentagem de quanto vai recebe
