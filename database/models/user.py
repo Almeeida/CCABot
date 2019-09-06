@@ -58,8 +58,8 @@ class UserCollection(Collection):
     pdl = self.data.get('pdl') or 0
     blue_essence = self.data.get('blue_essence') or 0
 
-    # datetime atual
-    date = str(datetime.now().timestamp())
+    # data atual
+    date = str(datetime.now().strftime('%d/%m/%Y'))
 
 
     #
