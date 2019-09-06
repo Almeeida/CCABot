@@ -107,7 +107,7 @@ class UserCollection(Collection):
       rank += 1
       blue_essence += 1000
       rank_up = True
-      rank_p_d[data] += 1
+      rank_p_d[date] += 1
 
     # salvando na database
     self.update({
