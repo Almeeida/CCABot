@@ -37,7 +37,7 @@ class CCABot(Bot):
   
     ctx = await self.get_context(message)
 
-    ctx._user = self._users.get(message.author.id, message.created_at)
+    ctx._user = self._users.get(message.author.id)
   
     try:
       await self.invoke(ctx)
