@@ -1,7 +1,10 @@
 from .Collection import Collection
 from random import randint
-
+from json import load
 import asyncio
+
+with open('data/rank.json') as file_data:
+  data = load(file_data)
 
 class UserCollection(Collection):
   def __init__ (self, collection, user_id, created_at, register):
@@ -15,10 +18,29 @@ class UserCollection(Collection):
       "pdl": 0,
       "rank": 1,
       "blue_essence": 0,
-      "reputation": 0,
+      "honors_points": 0,
+      "honors_users": 0,
       "daily_timestamp": None,
-      "political_party": None
+      "political_party": None,
+      "voted": None 
     }
+
+  def rank_name (self, rank = None, showEmoji = False):
+    rank = rank or self.data['rank']
+
+    name = data['names'][rank - 1]
+    if not showEmoji:
+      return name
+    else:
+      emoji = data['emojis'][name.split(' ')[0].lower()]
+      return f'{emoji} {name}'
+      
+  def pdl_total (self, pdl = None, required = None, showRequired = True):
+   pdl = pdl or self.data['pdl']
+   if not showRequired:
+     return pdl
+   required = required or (self.data['rank'] * 100)
+   return f'{pdl}/{required}'
 
   async def addPdl (self, ctx):
     if ctx.author.id in ctx.bot.cooldown_users:
@@ -53,10 +75,9 @@ class UserCollection(Collection):
     })
 
     if rank_up:
-      rank_name = ctx.bot._data['names'][total_rank - 1]
-      rank_emoji = ctx.bot._data['emojis'][rank_name.split(' ')[0].lower()]
+      rank_name = self.rank_name(rank = total_rank, showEmoji = True)
       be_emoji = ctx.bot._data['emojis']['blue_essence']
-      await ctx.channel.send(f'{ctx.author.mention} Foi promovido para {rank_emoji} **{rank_name}**!\n > {be_emoji} 1000')
+      await ctx.channel.send(f'{ctx.author.mention} Foi promovido para **{rank_name}**!\n > {be_emoji} 1000')
 
     print(f'''
     args_count {args_count}
@@ -69,7 +90,7 @@ class UserCollection(Collection):
     ''')
     channel = ctx.bot.get_channel(int(ctx.bot.env['PDL_CHANNEL']))
     if channel:
-      await channel.send(f'**{ctx.author}** ganhou {result} **PDL**!')
+      await channel.send(f'**{ctx.author}** ganhou {result} **PDL**!\n> {ctx.message.jump_url}')
      
 
 def limit (number, total = False):
